@@ -74,10 +74,10 @@ pub mod files {
 
     pub fn print_differences(file_1: &str, file_2: &str) {
         let differing: Vec<BTreeMap<u32, String>> = iterate_through_lines(file_1, file_2);
-        pirnt_in_sequence(differing);
+        print_in_sequence(differing);
     }
 
-    fn pirnt_in_sequence(differing: Vec<BTreeMap<u32, String>>) {
+    fn print_in_sequence(differing: Vec<BTreeMap<u32, String>>) {
         let differing_clone = differing.clone();
 
         let handle = thread::spawn(move || {
@@ -108,15 +108,15 @@ pub mod files {
                         println!("{}", line);
                     }
                     tmp.clear(); // The next sequence will start at index 0
+                    println!();
                     thread::sleep(time::Duration::from_millis(5));
                 }
             } else {
                 // We want to always print the last differing line(s)
                 for line in &tmp {
                     println!("{}", line);
+                    println!();
                 }
-                println!();
-                thread::sleep(time::Duration::from_millis(5));
             }
         }
     }
