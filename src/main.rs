@@ -1,6 +1,7 @@
 mod files;
+mod print_out;
 
-use files::files::print_differences;
+use print_out::print_differences;
 use std::env;
 
 fn main() {
