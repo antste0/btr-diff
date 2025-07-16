@@ -30,8 +30,7 @@ pub fn iterate_through_lines(filename_1: &str, filename_2: &str) -> Vec<BTreeMap
                 longer_file = 1;
             }
 
-            let mut differing: Vec<BTreeMap<u32, String>> =
-                vec![BTreeMap::new(), BTreeMap::new()];
+            let mut differing: Vec<BTreeMap<u32, String>> = vec![BTreeMap::new(), BTreeMap::new()];
 
             for i in 0..max_line_number {
                 if is_line_different(&lines_1[i], &lines_2[i]) {
@@ -41,11 +40,10 @@ pub fn iterate_through_lines(filename_1: &str, filename_2: &str) -> Vec<BTreeMap
             }
 
             if longer_file == 1 {
-                insert_the_remaining_lines(&lines_1, lines_1.len(), &mut differing[1]);
+                insert_the_remaining_lines(&lines_1, max_line_number, &mut differing[0]);
             } else if longer_file == 2 && lines_2.len() > lines_1.len() {
-                insert_the_remaining_lines(&lines_2, lines_2.len(), &mut differing[0]);
+                insert_the_remaining_lines(&lines_2, max_line_number, &mut differing[1]);
             }
-
             return differing;
         }
         Err(e) => {
