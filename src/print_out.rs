@@ -1,8 +1,8 @@
+use colored::Colorize;
 use std::collections::BTreeMap;
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time;
-use std::sync::{Arc, Mutex};
-use colored::Colorize;
 
 pub fn print_differences(file_1: &str, file_2: &str) {
     let differing: Vec<BTreeMap<u32, String>> = crate::files::iterate_through_lines(file_1, file_2);
@@ -14,8 +14,7 @@ fn print_in_sequence(differing: Vec<BTreeMap<u32, String>>) {
     let turn_clone = turn.clone();
 
     // May not be the most memory efficient way to do it but it works
-    let differing_clone = differing.clone(); 
-                                             
+    let differing_clone = differing.clone();
 
     let handle = thread::spawn(move || {
         filter_printing(&differing_clone[0], turn_clone, 0, "green");
@@ -24,7 +23,13 @@ fn print_in_sequence(differing: Vec<BTreeMap<u32, String>>) {
     handle.join().unwrap();
 }
 
-fn filter_printing(differing_lines: &BTreeMap<u32, String>, turn: Arc<Mutex<i32>>, turn_num: i32, color: &str) {
+fn filter_printing(
+    differing_lines: &BTreeMap<u32, String>,
+    turn: Arc<Mutex<i32>>,
+    turn_num: i32,
+    color: &str,
+) {
+    // TODO make an optional option to print out start - end segments
     let keys: Vec<_> = differing_lines.keys().collect();
     let mut sequences: Vec<String> = Vec::new();
 
@@ -53,7 +58,8 @@ fn filter_printing(differing_lines: &BTreeMap<u32, String>, turn: Arc<Mutex<i32>
                     println!("{}", line.color(color));
                 }
                 sequences.clear(); // The next sequence will start at index 0
-                if turn_num == 1 { // This ensures there's a space between sequences
+                if turn_num == 1 {
+                    // This ensures there's a space between sequences
                     println!();
                 }
                 *turn.lock().unwrap() = if turn_num == 0 { 1 } else { 0 };
